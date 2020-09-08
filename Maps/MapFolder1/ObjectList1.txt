@@ -1,0 +1,8 @@
+7;
+0, PineTree1, 1, PineTree1v1.x
+1, PineTree2, 1, PineTree1v2.x
+2, PineTree3, 1, PineTree1v3.x
+3, FirTree1, 1, FirTree1_1.x
+4, FirTree2, 1, FirTree1_2.x
+5, FirTree3, 1, FirTree1_3.x
+6, Sapling1, 1, Sapling1_1.x
