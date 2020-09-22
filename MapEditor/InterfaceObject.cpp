@@ -204,7 +204,7 @@ void InterfaceObject::Update(double mX, double mY, bool mL, bool mR)
 
 }
 
-
+//resize interface object based on the screen dimensions
 void InterfaceObject::Resize(int Sw, int Sh)
 {
 

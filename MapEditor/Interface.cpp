@@ -205,7 +205,6 @@ void Interface::Update(HWND hWnd, double mX, double mY, bool mL, bool mR)
 
 
 	//resize interface if screen dimensions have changed
-
 	float newScreenWidth = screenWidth;
 	float newScreenHeight = screenHeight;
 	if (IsWindow(hWnd))
@@ -222,7 +221,6 @@ void Interface::Update(HWND hWnd, double mX, double mY, bool mL, bool mR)
 
 		newScreenWidth = windowRect.right - windowRect.left;
 		newScreenHeight = windowRect.bottom - windowRect.top;
-
 	}
 	if (newScreenWidth != screenWidth || newScreenHeight != screenHeight)
 	{
@@ -233,6 +231,7 @@ void Interface::Update(HWND hWnd, double mX, double mY, bool mL, bool mR)
 			interfaceObjects[i]->Resize(newScreenWidth, newScreenHeight);
 		}
 	}
+
 
 
 	for (int i = 0; i < interfaceObjects.size(); i++)
