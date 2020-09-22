@@ -11,19 +11,19 @@ InterfaceController::~InterfaceController(void)
 void InterfaceController::Init()
 {
 
-	this->interfaceName = "NULL";
-	this->buttonName = "NULL";
-	this->buttonPressed = false;
+	interfaceName = "NULL";
+	buttonName = "NULL";
+	buttonPressed = false;
 
 
 }
 
-void InterfaceController::Update(string interfaceN, string objectN, int actionIndex)
+void InterfaceController::UpdateScreen(string interfaceN, string objectN, int actionIndex)
 {
 
-	this->interfaceName = interfaceN;
-	this->buttonName = objectN;
-	this->buttonPressed = true;
+	interfaceName = interfaceN;
+	buttonName = objectN;
+	buttonPressed = true;
 
 
 }
@@ -32,37 +32,37 @@ InterfaceAction InterfaceController::CheckController()
 {
 	InterfaceAction returnAction;
 
-	returnAction.currentScreen = this->interfaceName;
+	returnAction.currentScreen = interfaceName;
 
-	if (this->interfaceName == "MainMenu")
+	if (interfaceName == "MainMenu")
 	{
-		if (this->buttonName == "FreePlay")
+		if (buttonName == "FreePlay")
 		{
-			if (this->buttonPressed == true)
+			if (buttonPressed == true)
 			{
 				returnAction.nextScreen = 2;
 			}
 		}
-		if (this->buttonName == "Quit")
+		if (buttonName == "Quit")
 		{
-			if (this->buttonPressed == true)
+			if (buttonPressed == true)
 			{
 				returnAction.nextScreen = 3;
 			}
 		}
 	}
-	else if (this->interfaceName == "NewProfile")
+	else if (interfaceName == "NewProfile")
 	{
-		if (this->buttonName == "BackToMain")
+		if (buttonName == "BackToMain")
 		{
-			if (this->buttonPressed == true)
+			if (buttonPressed == true)
 			{
 				returnAction.nextScreen = 1;
 			}
 		}
-		if (this->buttonName == "Game")
+		if (buttonName == "Game")
 		{
-			if (this->buttonPressed == true)
+			if (buttonPressed == true)
 			{
 				returnAction.nextScreen = 5;
 			}
@@ -81,9 +81,9 @@ InterfaceAction InterfaceController::CheckController()
 void InterfaceController::ResetController()
 {
 
-	this->interfaceName = "NULL";
-	this->buttonName = "NULL";
-	this->buttonPressed = false;
+	interfaceName = "NULL";
+	buttonName = "NULL";
+	buttonPressed = false;
 
 
 }

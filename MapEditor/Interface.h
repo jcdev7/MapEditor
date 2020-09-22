@@ -32,7 +32,7 @@ public:
 	~Interface(void);
 
 	void Init(string, int, int, int, LPDIRECT3DDEVICE9);//passes the screen width, height, and an int for the type of interface
-	void Update(double, double, bool, bool);//update passes mouse information
+	void Update(HWND windowHandle, double, double, bool, bool);//update passes mouse information
 	void Draw();
 	void InitEditorInterface();
 	void InitMainMenuInterface();

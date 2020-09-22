@@ -19,7 +19,7 @@ public:
 	InterfaceController(void);
 	~InterfaceController(void);
 	void Init();
-	void Update(string, string, int);//called from each InterfaceObject that has actions
+	void UpdateScreen(string, string, int);//called from each InterfaceObject that has actions
 	InterfaceAction CheckController();//called from Interface to check which objects have changed state
 	void ResetController();//called from Interface to reset once an action has been read
 

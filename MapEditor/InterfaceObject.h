@@ -35,9 +35,8 @@ public:
 	//Interface *tempinterface;
 
 	void Init(string interfaceName, string name, LPDIRECT3DDEVICE9, int, int, double, double, double, double, string, InterfaceObject *currentParent, InterfaceController *currentController);//passes the screen width, height, and an int for the type of interface
-																																															  //abstract functions, only the subclass versions will ever be called
-																																															  //virtual void Update(double, double) = 0;//update passes mouse information
-																																															  //virtual void Draw() = 0;
+	
+	
 	void Update(double, double, bool, bool);//update passes mouse information
 	void Draw();
 	void SetPosition(D3DXVECTOR3);
@@ -46,6 +45,10 @@ public:
 	void SetScreenWidth(int);
 
 	void DeleteObject();
+
+
+	void Resize(int Sw, int Sh);
+	void LoadTexture();
 
 	virtual void Interact(double, double, bool, bool);//a type specific function, for example is called when pressed if a button
 
@@ -72,6 +75,8 @@ public:
 
 	string interfaceName;
 	string name;
+
+	string textureFilename;
 
 	bool visible;
 
@@ -108,10 +113,21 @@ public:
 	D3DXVECTOR2 percentDimensions;
 
 
+	//options to lock dimensions independent of window dimensions
+	////
+	bool lockWidthToHeightRatio = false;
+	float widthToHeightRatio = 1;
 
+	bool lockHeightToWidthRatio = false;
+	float heightToWidthRatio = 1;
 
-
-
+	//allignment of object within the original dimensions
+	//-1 = allign left/up
+	//0 = allign center
+	//1 = allign right/down
+	float xAllignment = -1;
+	float yAllignment = -1;
+	////
 
 
 

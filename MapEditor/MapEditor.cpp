@@ -2459,6 +2459,7 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 		AdjustWindowRectEx(&windowRect, windowsStyle, hasMenu, extendedWindowsStyle);
 
 		SetWindowPos(hWnd, NULL, 0, 0, windowRect.right - windowRect.left, windowRect.bottom - windowRect.top, SWP_NOZORDER | SWP_NOMOVE);
+		
 	}
 
 
@@ -2532,7 +2533,7 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 
 						if (GameState == State_MainMenu)
 						{
-							MainMenu.Update(ptCurrentMousePosit.x, ptCurrentMousePosit.y, bMouseLeft, bMouseRight);
+							MainMenu.Update(hWnd, ptCurrentMousePosit.x, ptCurrentMousePosit.y, bMouseLeft, bMouseRight);
 							MainMenu.Draw();
 						}
 						if (GameState == State_Game)
@@ -2548,7 +2549,12 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 								MainMenu.InitEditorInterface();
 							}
 							Render();
-							MainMenu.Update(ptCurrentMousePosit.x, ptCurrentMousePosit.y, bMouseLeft, bMouseRight);
+
+
+
+
+
+							MainMenu.Update(hWnd, ptCurrentMousePosit.x, ptCurrentMousePosit.y, bMouseLeft, bMouseRight);
 							MainMenu.Draw();
 
 						}

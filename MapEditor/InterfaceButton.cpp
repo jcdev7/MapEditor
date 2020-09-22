@@ -66,7 +66,7 @@ void InterfaceButton::Interact(double mX, double mY, bool mL, bool mR)
 		{
 			int sjdkhgsdkj = 0;
 			pressed = true;
-			this->controller->Update(this->interfaceName, this->name, 1);
+			this->controller->UpdateScreen(this->interfaceName, this->name, 1);
 		}
 		else
 		{

@@ -106,8 +106,9 @@ void Interface::InitMainMenuInterface()
 
 	//add buttons
 
-
 	InterfaceButton* FreePlay = new InterfaceButton();
+	FreePlay->lockHeightToWidthRatio = true;
+	FreePlay->heightToWidthRatio = .75f;
 	FreePlay->Init("MainMenu", "FreePlay", Graphics_Device, screenWidth, screenHeight, .4, .45, .2, .1, "MainMenu\\FreePlayUp.jpg", menuPanelBackground, interfaceController);
 	FreePlay->InitButton("MainMenu\\FreePlayDown.jpg");
 	FreePlay->fullscreen = false;
@@ -191,16 +192,48 @@ void Interface::InitLoadingScreen()
 	menuBackground->Init("MainMenu", "background", Graphics_Device, screenWidth, screenHeight, 0, 0, 1, 1, "LoadingScreens\\testLoadingScreen1.jpg", NULL, interfaceController);
 	interfaceObjects.push_back(menuBackground);
 
-	this->interfaceController->Update(this->name, "NULL", 0);
+	this->interfaceController->UpdateScreen(this->name, "NULL", 0);
 
 }
 
-void Interface::Update(double mX, double mY, bool mL, bool mR)
+void Interface::Update(HWND hWnd, double mX, double mY, bool mL, bool mR)
 {
 	mouseX = mX;
 	mouseY = mY;
 	mouseLeft = mL;
 	mouseRight = mR;
+
+
+	//resize interface if screen dimensions have changed
+
+	float newScreenWidth = screenWidth;
+	float newScreenHeight = screenHeight;
+	if (IsWindow(hWnd))
+	{
+		DWORD windowsStyle = GetWindowLongPtr(hWnd, GWL_STYLE);
+		DWORD extendedWindowsStyle = GetWindowLongPtr(hWnd, GWL_EXSTYLE);
+		HMENU windowsMenu = GetMenu(hWnd);
+		bool hasMenu = windowsMenu;
+
+		RECT windowRect;
+		GetWindowRect(hWnd, &windowRect);
+
+		AdjustWindowRectEx(&windowRect, windowsStyle, hasMenu, extendedWindowsStyle);
+
+		newScreenWidth = windowRect.right - windowRect.left;
+		newScreenHeight = windowRect.bottom - windowRect.top;
+
+	}
+	if (newScreenWidth != screenWidth || newScreenHeight != screenHeight)
+	{
+		screenWidth = newScreenWidth;
+		screenHeight = newScreenHeight;
+		for (int i = 0; i < interfaceObjects.size(); i++)
+		{
+			interfaceObjects[i]->Resize(newScreenWidth, newScreenHeight);
+		}
+	}
+
 
 	for (int i = 0; i < interfaceObjects.size(); i++)
 	{
