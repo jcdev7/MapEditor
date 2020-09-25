@@ -32,7 +32,7 @@ public:
 	Interface(void);
 	~Interface(void);
 
-	void Init(string, int, int, int, LPDIRECT3DDEVICE9);//passes the screen width, height, and an int for the type of interface
+	void Init(string nC, int sW, int sH, InterfaceAction::Next_Screen t, LPDIRECT3DDEVICE9 GraphicsDevice);//passes the screen width, height, and an int for the type of interface
 	void Update(HWND windowHandle, double, double, bool, bool);//update passes mouse information
 	void Draw();
 	void InitEditorInterface();
@@ -43,7 +43,7 @@ public:
 	void InitOptions();
 	void InitLoadingScreen();
 
-	void ChangeScreen(int);
+	void ChangeScreen(InterfaceAction::Next_Screen);
 
 	void DeleteInterface();
 

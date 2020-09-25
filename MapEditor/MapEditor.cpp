@@ -182,6 +182,10 @@ float lz = 0;//temp var for moving light
 
 int counter = 0;
 
+
+clock_t frameBeginC, frameEndC;
+double frameTimer = 0;
+
 MOUSEMOVEPOINT MouseLocation;
 
 
@@ -1337,12 +1341,6 @@ int LoadSquaresByChunk(int loadC, int loadS)
 
 
 
-
-	//these tests prove that GetTerrainMesh takes a long time, while CloneMeshFVF takes nearly no time, 
-	//therefore, only the GetTerrainMesh functions need be included in the threads,
-	//newMesh will be replaced by a 2nd buffer mesh in mapdata, and the CloneMeshFVF operation will be called 
-	//by the main thread just before the draw section for any threads that have completed
-	//this will result in never having to worry about a mesh that isn't available trying to draw
 	beginC = clock();
 	newUpdateMesh = TMDD2->GetTerrainMesh(&mapList, tChunkNum, tMeshNum, currentDetailLevel, true);
 	endC = clock();
@@ -2488,14 +2486,21 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 
 			if (loadedMainMenu == false)
 			{
-				MainMenu.Init("MainMenu", ScreenWidth, ScreenHeight, 1, Graphics_Device);
+				MainMenu.Init("MainMenu", ScreenWidth, ScreenHeight, InterfaceAction::Next_Screen::Screen_MainMenu, Graphics_Device);
 				loadedMainMenu = true;
 			}
 
+			frameBeginC = clock();
 			// Enter the message loop
 			ZeroMemory(&msg, sizeof(msg));
 			while (GameState != State_Quit)
 			{
+
+
+
+
+
+
 				if ((GetKeyState(VK_RETURN) & 0x80) && tempIsInMenu)
 				{
 					GameState = State_Game;
@@ -2522,51 +2527,62 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 				}
 				else
 				{
-					// Main Menu Loop //
-					// Clear the backbuffer and the zbuffer
-					Graphics_Device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
+					// Main Loop //
 
-					// Begin the scene
-					if (SUCCEEDED(Graphics_Device->BeginScene()))
+
+					if (frameTimer >= 1000.0 / 60.0 || GameState == State_Game)
 					{
+						frameBeginC = clock();
 
 
+						// Clear the backbuffer and the zbuffer
+						Graphics_Device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_RGBA(0, 0, 0, 0), 1.0f, 0);
 
-						if (GameState == State_MainMenu)
+						// Begin the scene
+						if (SUCCEEDED(Graphics_Device->BeginScene()))
 						{
-							MainMenu.Update(hWnd, ptCurrentMousePosit.x, ptCurrentMousePosit.y, bMouseLeft, bMouseRight);
-							MainMenu.Draw();
-						}
-						if (GameState == State_Game)
-						{
-							if (showLoadingScreen == true)
+
+
+
+							if (GameState == State_MainMenu)
 							{
-								MainMenu.DeleteInterface();
-								//display loading screen here
-
-								InitCursor();
-								LoadMap(MapFolderString, Graphics_Device);
-								showLoadingScreen = false;
-								MainMenu.InitEditorInterface();
+								MainMenu.Update(hWnd, ptCurrentMousePosit.x, ptCurrentMousePosit.y, bMouseLeft, bMouseRight);
+								MainMenu.Draw();
 							}
-							Render();
+							if (GameState == State_Game)
+							{
+								if (showLoadingScreen == true)
+								{
+									MainMenu.DeleteInterface();
+									//display loading screen here
+
+									InitCursor();
+									LoadMap(MapFolderString, Graphics_Device);
+									showLoadingScreen = false;
+									MainMenu.InitEditorInterface();
+								}
+								Render();
 
 
 
 
 
-							MainMenu.Update(hWnd, ptCurrentMousePosit.x, ptCurrentMousePosit.y, bMouseLeft, bMouseRight);
-							MainMenu.Draw();
+								MainMenu.Update(hWnd, ptCurrentMousePosit.x, ptCurrentMousePosit.y, bMouseLeft, bMouseRight);
+								MainMenu.Draw();
 
+							}
+
+
+							// End the scene
+							Graphics_Device->EndScene();
 						}
 
-
-						// End the scene
-						Graphics_Device->EndScene();
+						// Present the backbuffer contents to the display
+						Graphics_Device->Present(NULL, NULL, NULL, NULL);
 					}
 
-					// Present the backbuffer contents to the display
-					Graphics_Device->Present(NULL, NULL, NULL, NULL);
+					frameEndC = clock();
+					frameTimer = difftime(frameEndC, frameBeginC);
 
 
 				}

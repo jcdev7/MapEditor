@@ -40,14 +40,16 @@ InterfaceAction InterfaceController::CheckController()
 		{
 			if (buttonPressed == true)
 			{
-				returnAction.nextScreen = 2;
+				//returnAction.nextScreen = 2;
+				returnAction.nextScreen = InterfaceAction::Next_Screen::Screen_NewGame;
 			}
 		}
 		if (buttonName == "Quit")
 		{
 			if (buttonPressed == true)
 			{
-				returnAction.nextScreen = 3;
+				//returnAction.nextScreen = 3;
+				returnAction.nextScreen = InterfaceAction::Next_Screen::Screen_Quit;
 			}
 		}
 	}
@@ -57,20 +59,23 @@ InterfaceAction InterfaceController::CheckController()
 		{
 			if (buttonPressed == true)
 			{
-				returnAction.nextScreen = 1;
+				//returnAction.nextScreen = 1;
+				returnAction.nextScreen = InterfaceAction::Next_Screen::Screen_MainMenu;
 			}
 		}
 		if (buttonName == "Game")
 		{
 			if (buttonPressed == true)
 			{
-				returnAction.nextScreen = 5;
+				//returnAction.nextScreen = 5;
+				returnAction.nextScreen = InterfaceAction::Next_Screen::Screen_GameMenu;
 			}
 		}
 	}
 	else
 	{
-		returnAction.nextScreen = 0;
+		//returnAction.nextScreen = 0;
+		returnAction.nextScreen = InterfaceAction::Next_Screen::Screen_NoChange;
 	}
 
 

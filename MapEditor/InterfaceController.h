@@ -27,6 +27,7 @@ public:
 	string buttonName;
 	bool buttonPressed;
 
+
 };
 #endif
 

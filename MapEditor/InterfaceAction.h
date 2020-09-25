@@ -14,9 +14,14 @@ class InterfaceAction
 {
 public:
 
+
+	enum Next_Screen { Screen_MainMenu, Screen_NewGame, Screen_LoadingScreen, Screen_GameMenu, Screen_Quit, Screen_NoChange};
+
 	string objectType;
-	int nextScreen;
+	//int nextScreen;
+	Next_Screen nextScreen;
 	string currentScreen;
+
 
 };
 

@@ -17,7 +17,7 @@ Interface::~Interface(void)
 }
 
 
-void Interface::Init(string nC, int sW, int sH, int t, LPDIRECT3DDEVICE9 GraphicsDevice)
+void Interface::Init(string nC, int sW, int sH, InterfaceAction::Next_Screen t, LPDIRECT3DDEVICE9 GraphicsDevice)
 {
 	this->interfaceController = new InterfaceController();
 	this->interfaceController->Init();
@@ -29,17 +29,9 @@ void Interface::Init(string nC, int sW, int sH, int t, LPDIRECT3DDEVICE9 Graphic
 	type = t;
 	Graphics_Device = GraphicsDevice;
 
-	if (type == 0)
-	{
-		InitEditorInterface();
-	}
-	if (type == 1)
+	if (type == InterfaceAction::Next_Screen::Screen_MainMenu)
 	{
 		InitMainMenuInterface();
-	}
-	if (type == 2)
-	{
-		InitLoadingScreen();
 	}
 
 
@@ -242,31 +234,25 @@ void Interface::Update(HWND hWnd, double mX, double mY, bool mL, bool mR)
 
 	InterfaceAction checkC;
 	checkC = this->interfaceController->CheckController();
-	if (checkC.nextScreen == 1)
+	if (checkC.nextScreen == InterfaceAction::Next_Screen::Screen_NoChange)
 	{
-		this->interfaceController->ResetController();
-		ChangeScreen(1);
+
 	}
-	if (checkC.nextScreen == 2)
-	{
-		this->interfaceController->ResetController();
-		ChangeScreen(2);
-	}
-	if (checkC.nextScreen == 3)
+	else if (checkC.nextScreen == InterfaceAction::Next_Screen::Screen_Quit)
 	{
 		this->interfaceController->ResetController();
 		PostQuitMessage(0);
 	}
-	if (checkC.nextScreen == 5)
+	else
 	{
 		this->interfaceController->ResetController();
-		ChangeScreen(5);
+		ChangeScreen(checkC.nextScreen);
 	}
 
 
 }
 
-void Interface::ChangeScreen(int t)
+void Interface::ChangeScreen(InterfaceAction::Next_Screen t)
 {
 
 	//delete the old screen
@@ -276,36 +262,24 @@ void Interface::ChangeScreen(int t)
 	//set the new screen
 	this->type = t;
 
-	//init the new screen
-	if (type == 0)
-	{
-		InitEditorInterface();
-	}
-	if (type == 1)//main menu
+
+	if (t == InterfaceAction::Next_Screen::Screen_MainMenu)//main menu
 	{
 		InitMainMenuInterface();
 	}
-	if (type == 2)//new profile
+	else if (t == InterfaceAction::Next_Screen::Screen_LoadingScreen)
+	{
+		InitLoadingScreen();
+	}
+	else if (t == InterfaceAction::Next_Screen::Screen_NewGame)
 	{
 		InitNewProfile();
-		//InitLoadingScreen();
 	}
-	if (type == 3)//load profile
+	else if (t == InterfaceAction::Next_Screen::Screen_GameMenu)
 	{
 		InitLoadingScreen();
 	}
-	if (type == 4)//free play
-	{
-		InitLoadingScreen();
-	}
-	if (type == 5)//options
-	{
-		InitLoadingScreen();
-	}
-	if (type == 6)//quit
-	{
-		InitLoadingScreen();
-	}
+
 
 
 	//make sure all new interfaceObjects have the correct initial screen dimensions
