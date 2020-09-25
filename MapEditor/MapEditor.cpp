@@ -162,6 +162,8 @@ int MapLength = 50;
 
 
 
+int initialScreenWidth = 1600;
+int initialScreenHeight = 900;
 
 float ScreenWidth = 1680;
 float ScreenHeight = 1050;
@@ -2427,14 +2429,13 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 	RegisterClassEx(&wc);
 
 	//get the current screen resolution
-	ScreenWidth = GetSystemMetrics(SM_CXSCREEN);
-	ScreenHeight = GetSystemMetrics(SM_CYSCREEN);
+	//ScreenWidth = GetSystemMetrics(SM_CXSCREEN);
+	//ScreenHeight = GetSystemMetrics(SM_CYSCREEN);
 
-	ScreenWidth = 1600;
-	ScreenHeight = 900;
 
-	int initScreenWidth = ScreenWidth;
-	int initScreenHeight = ScreenHeight;
+	ScreenWidth = initialScreenWidth;
+	ScreenHeight = initialScreenHeight;
+
 
 	
 
@@ -2442,7 +2443,7 @@ INT WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, INT)
 	//windowed:    WS_OVERLAPPEDWINDOW
 	// Create the application's window
 	HWND hWnd = CreateWindow(TEXT(" "), TEXT("Map Editor"),
-		WS_OVERLAPPEDWINDOW, 0, 0, initScreenWidth, initScreenHeight,
+		WS_OVERLAPPEDWINDOW, 0, 0, ScreenWidth, ScreenHeight,
 		NULL, NULL, wc.hInstance, NULL);
 
 	//the CreateWindow method above creates a window where the height includes the title bar height and borders

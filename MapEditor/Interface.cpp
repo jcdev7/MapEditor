@@ -24,6 +24,8 @@ void Interface::Init(string nC, int sW, int sH, int t, LPDIRECT3DDEVICE9 Graphic
 	this->name = nC;
 	screenWidth = sW;
 	screenHeight = sH;
+	initialScreenWidth = sW;
+	initialScreenHeight = sH;
 	type = t;
 	Graphics_Device = GraphicsDevice;
 
@@ -96,6 +98,7 @@ void Interface::InitMainMenuInterface()
 
 	InterfacePanel* menuBackground = new InterfacePanel();
 	menuBackground->Init("MainMenu", "background", Graphics_Device, screenWidth, screenHeight, 0, 0, 1, 1, "MainMenu\\menuBackground2.jpg", NULL, interfaceController);
+	//menuBackground->Init("MainMenu", "background", Graphics_Device, screenWidth, screenHeight, 0, 0, 1, 1, "MainMenu\\testBackground1.jpg", NULL, interfaceController);
 	interfaceObjects.push_back(menuBackground);
 
 
@@ -209,18 +212,11 @@ void Interface::Update(HWND hWnd, double mX, double mY, bool mL, bool mR)
 	float newScreenHeight = screenHeight;
 	if (IsWindow(hWnd))
 	{
-		DWORD windowsStyle = GetWindowLongPtr(hWnd, GWL_STYLE);
-		DWORD extendedWindowsStyle = GetWindowLongPtr(hWnd, GWL_EXSTYLE);
-		HMENU windowsMenu = GetMenu(hWnd);
-		bool hasMenu = windowsMenu;
+		WINDOWINFO windowInfo;
+		GetWindowInfo(hWnd, &windowInfo);
 
-		RECT windowRect;
-		GetWindowRect(hWnd, &windowRect);
-
-		AdjustWindowRectEx(&windowRect, windowsStyle, hasMenu, extendedWindowsStyle);
-
-		newScreenWidth = windowRect.right - windowRect.left;
-		newScreenHeight = windowRect.bottom - windowRect.top;
+		newScreenWidth = windowInfo.rcClient.right - windowInfo.rcClient.left;
+		newScreenHeight = windowInfo.rcClient.bottom - windowInfo.rcClient.top;
 	}
 	if (newScreenWidth != screenWidth || newScreenHeight != screenHeight)
 	{
@@ -311,6 +307,12 @@ void Interface::ChangeScreen(int t)
 		InitLoadingScreen();
 	}
 
+
+	//make sure all new interfaceObjects have the correct initial screen dimensions
+	for (int i = 0; i < interfaceObjects.size(); i++)
+	{
+		interfaceObjects[i]->SetInitialScreenDimensions(initialScreenWidth, initialScreenHeight);
+	}
 
 }
 

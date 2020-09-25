@@ -31,10 +31,27 @@ void InterfaceObject::Init(string currentInterfaceName, string currentName, LPDI
 
 	textureFilename = filename;
 
+
+
 	Resize(Sw, Sh);
 
 
 
+
+
+}
+
+
+void InterfaceObject::SetInitialScreenDimensions(int Sw, int Sh)
+{
+	//set initial values here (these can't be changed when resizing)
+	initialScreenWidth = Sw;
+	initialScreenHeight = Sh;
+
+	for (int i = 0; i < interfaceObjects.size(); i++)
+	{
+		interfaceObjects[i]->SetInitialScreenDimensions(Sw, Sh);
+	}
 
 
 }
@@ -277,7 +294,7 @@ void InterfaceObject::LoadTexture()
 
 void InterfaceObject::Interact(double mX, double mY, bool mL, bool mR)
 {
-	int sjghskdj = 0;
+
 }
 
 void InterfaceObject::Draw()
@@ -285,7 +302,7 @@ void InterfaceObject::Draw()
 
 	Graphics_Device->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
 
-
+	
 
 	D3DXVECTOR3 tempDim;
 	D3DXVECTOR3 tempOff;
@@ -297,6 +314,13 @@ void InterfaceObject::Draw()
 	tempOff.x = pixelOffset.x;
 	tempOff.y = pixelOffset.y;
 	tempOff.z = 1;
+
+
+	tempDim.x *= (initialScreenWidth / screenWidth);
+	tempDim.y *= (initialScreenHeight / screenHeight);
+
+	tempOff.x *= (initialScreenWidth / screenWidth);
+	tempOff.y *= (initialScreenHeight / screenHeight);
 
 
 	D3DXMatrixTranslation(&mTranslation, tempOff.x, tempOff.y, tempOff.z);
@@ -319,12 +343,19 @@ void InterfaceObject::Draw()
 	{
 		if (interfaceSprites[i]->visible == true)
 		{
-			tempDim.x = pixelDimensions.x / interfaceSprites[i]->textureWidth;
-			tempDim.y = pixelDimensions.y / interfaceSprites[i]->textureHeight;
+			tempDim.x = pixelDimensions.x / baseWidth;
+			tempDim.y = pixelDimensions.y / baseHeight;
 			tempDim.z = 1;
 			tempOff.x = pixelOffset.x;
 			tempOff.y = pixelOffset.y;
 			tempOff.z = 1;
+
+
+			tempDim.x *= (initialScreenWidth / screenWidth);
+			tempDim.y *= (initialScreenHeight / screenHeight);
+
+			tempOff.x *= (initialScreenWidth / screenWidth);
+			tempOff.y *= (initialScreenHeight / screenHeight);
 
 			D3DXMatrixTranslation(&mTranslation, tempOff.x, tempOff.y, tempOff.z);
 			D3DXMatrixScaling(&mScale, tempDim.x, tempDim.y, tempDim.z);

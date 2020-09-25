@@ -15,6 +15,7 @@ class InterfaceController;
 #include <vector>
 #include <string>
 
+
 #include "InterfaceController.h"
 #include "InterfaceAction.h"
 
@@ -57,8 +58,13 @@ private:
 
 	LPDIRECT3DDEVICE9 Graphics_Device;
 
+	//screen size in pixels
 	int screenWidth;
 	int screenHeight;
+
+	//initial screen size in pixels (needed when resizing screen)
+	float initialScreenWidth;
+	float initialScreenHeight;
 
 	int type;
 

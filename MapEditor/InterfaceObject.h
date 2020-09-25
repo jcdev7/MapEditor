@@ -39,6 +39,7 @@ public:
 	
 	void Update(double, double, bool, bool);//update passes mouse information
 	void Draw();
+	void SetInitialScreenDimensions(int Sw, int Sh);
 	void SetPosition(D3DXVECTOR3);
 	void SetScale(D3DXVECTOR3);
 	void SetScreenHeight(int);
@@ -89,6 +90,10 @@ public:
 	//screen size in pixels
 	float screenWidth;
 	float screenHeight;
+
+	//initial screen size in pixels (needed when resizing screen)
+	float initialScreenWidth = 1600;
+	float initialScreenHeight = 900;
 
 	//image size in pixels
 	float baseWidth;
