@@ -79,27 +79,34 @@ LPD3DXMESH TerrainMeshData::GetTerrainMesh(MapList *ML, int chunkIndex, int mapI
 	num = 0;
 
 	//setup currentTextures list
-	ML->TerrainMapChunks[chunkIndex].TerrainMapData[mapIndex].currentTextures.clear();
+	for (int eT = 0; eT < ML->TerrainMapChunks[chunkIndex].TerrainMapData[mapIndex].currentTexturesMax; eT++)
+	{
+		ML->TerrainMapChunks[chunkIndex].TerrainMapData[mapIndex].currentTextures[eT] = -1;
+	}
+	ML->TerrainMapChunks[chunkIndex].TerrainMapData[mapIndex].currentTexturesCount = 0;
+	int tempCurrentTexturesCount = 0;
 	for (int tX = 0; tX < ML->TerrainMapChunks[chunkIndex].TerrainMapData[mapIndex].width; tX++)
 	{
 		for (int tY = 0; tY < ML->TerrainMapChunks[chunkIndex].TerrainMapData[mapIndex].length; tY++)
 		{
 			//check if texture is in currentTextures
 			bool tempHasTexture = false;
-			for (int tI = 0; tI < ML->TerrainMapChunks[chunkIndex].TerrainMapData[mapIndex].currentTextures.size(); tI++)
+			for (int tI = 0; tI < ML->TerrainMapChunks[chunkIndex].TerrainMapData[mapIndex].currentTexturesMax; tI++)
 			{
 				if (ML->TerrainMapChunks[chunkIndex].TerrainMapData[mapIndex].currentTextures[tI] == ML->TerrainMapChunks[chunkIndex].TerrainMapData[mapIndex].textureMap[tX][tY])
 				{
 					tempHasTexture = true;
-					tI = ML->TerrainMapChunks[chunkIndex].TerrainMapData[mapIndex].currentTextures.size();
+					tI = ML->TerrainMapChunks[chunkIndex].TerrainMapData[mapIndex].currentTexturesMax;
 				}
 			}
 			if (tempHasTexture == false)
 			{
-				ML->TerrainMapChunks[chunkIndex].TerrainMapData[mapIndex].currentTextures.push_back(ML->TerrainMapChunks[chunkIndex].TerrainMapData[mapIndex].textureMap[tX][tY]);
+				ML->TerrainMapChunks[chunkIndex].TerrainMapData[mapIndex].currentTextures[tempCurrentTexturesCount] = ML->TerrainMapChunks[chunkIndex].TerrainMapData[mapIndex].textureMap[tX][tY];
 			}
 		}
 	}
+	ML->TerrainMapChunks[chunkIndex].TerrainMapData[mapIndex].currentTexturesCount = tempCurrentTexturesCount;
+
 
 	// Create the vertex buffer.
 	if (FAILED(Graphics_Device->CreateVertexBuffer((MapWidth*MapHeight * 6 + ((MapWidth * 2 + MapHeight * 2) * 6)) * sizeof(IMPROVEDVERTEX),
@@ -1133,6 +1140,14 @@ LPD3DXMESH TerrainMeshData::GetTerrainMesh(MapList *ML, int chunkIndex, int mapI
 
 
 
+
+LPD3DXMESH TerrainMeshData::CombineMeshes()
+{
+	LPD3DXMESH CombinedMesh;
+
+
+	return CombinedMesh;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

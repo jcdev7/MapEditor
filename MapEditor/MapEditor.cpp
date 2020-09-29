@@ -182,6 +182,7 @@ float lz = 0;//temp var for moving light
 
 int counter = 0;
 
+int drawSubsetCalls = 0;
 
 clock_t frameBeginC, frameEndC;
 double frameTimer = 0;
@@ -954,6 +955,13 @@ VOID DisplayFPS(float fps, int faceIndex, int faceX, int faceY)
 
 	fpsMessage = fpsMessage + " visible squares: " + polygonCounterString;
 
+	ss.clear();
+	ss << drawSubsetCalls;
+	ss >> polygonCounterString;
+	ss.clear();
+
+	fpsMessage += " drawSubsets: " + polygonCounterString;
+
 	int activeThreadCounter = 0;
 	for (int i = 0; i < updateThreads.size(); i++)
 	{
@@ -1584,8 +1592,7 @@ VOID Render()
 		int sdjkhgksdj = 0;
 	}
 
-
-
+	drawSubsetCalls = 0;
 	mapList.SetupMaterial(1, Graphics_Device);
 	Graphics_Device->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
 
@@ -1594,6 +1601,7 @@ VOID Render()
 	Graphics_Device->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 
 	Graphics_Device->SetRenderState(D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_COLOR1);
+
 	////////////////This loop is for drawing
 	for (int visibleNum = 0; visibleNum < VisibleTerrainList.size(); visibleNum++)
 	{
@@ -1610,38 +1618,40 @@ VOID Render()
 
 			if (mapList.TerrainTextureData.size() >= 1)//bounds check, just in case
 			{
-				if (mapList.TerrainMapChunks[tChunkNum].TerrainMapData[tMeshNum].Terrain_Mesh != NULL
-					&&mapList.TerrainMapChunks[tChunkNum].TerrainMapData[tMeshNum].beingUpdated == false)
+				//add an option for toggling on or off (start tn at 0 instead of 1) these lines at the edge of each square
+				for (int tn = editorInput->DisplayEdgeLines; tn < mapList.TerrainTextureData.size(); tn++)
 				{
-					//add an option for toggling on or off (start tn at 0 instead of 1) these lines at the edge of each square
-					for (int tn = editorInput->DisplayEdgeLines; tn < mapList.TerrainTextureData.size(); tn++)
+					//check whether the mesh has any squares with the current texture
+					bool hasTexture = false;
+					/*
+					for (int tI = 0; tI < mapList.TerrainMapChunks[tChunkNum].TerrainMapData[tMeshNum].currentTexturesCount; tI++)
 					{
-						//check whether the mesh has any squares with the current texture
-						bool hasTexture = false;
-						for (int tI = 0; tI < mapList.TerrainMapChunks[tChunkNum].TerrainMapData[tMeshNum].currentTextures.size(); tI++)
+						if (mapList.TerrainMapChunks[tChunkNum].TerrainMapData[tMeshNum].currentTextures[tI] == mapList.TerrainTextureData[tn].index)
 						{
-							if (mapList.TerrainMapChunks[tChunkNum].TerrainMapData[tMeshNum].currentTextures[tI] == mapList.TerrainTextureData[tn].index)
-							{
-								hasTexture = true;
-							}
+							hasTexture = true;
+							tI = mapList.TerrainMapChunks[tChunkNum].TerrainMapData[tMeshNum].currentTexturesCount;
 						}
-
-
-
-						if (hasTexture == true || tn == 0)
-						{
-							Graphics_Device->SetTexture(0, mapList.TerrainTextureData[tn].terrainTexture[0]);
-							mapList.TerrainMapChunks[tChunkNum].TerrainMapData[tMeshNum].Terrain_Mesh->DrawSubset(tn);
-						}
-
 					}
+					*/
+					hasTexture = true;
+
+
+					if (hasTexture == true || tn == 0)
+					{
+						Graphics_Device->SetTexture(0, mapList.TerrainTextureData[tn].terrainTexture[0]);
+						mapList.TerrainMapChunks[tChunkNum].TerrainMapData[tMeshNum].Terrain_Mesh->DrawSubset(tn);
+						drawSubsetCalls++;
+					}
+
 				}
+				
 			}
 		}
 
 	}
 
 
+	
 	////////////////This loop is for drawing (the blended edges)
 	for (int visibleNum = 0; visibleNum < VisibleTerrainList.size(); visibleNum++)
 	{
@@ -1657,55 +1667,59 @@ VOID Render()
 
 			if (mapList.TerrainTextureData.size() >= 1)//bounds check, just in case
 			{
-				if (mapList.TerrainMapChunks[tChunkNum].TerrainMapData[tMeshNum].Terrain_Mesh != NULL
-					&&mapList.TerrainMapChunks[tChunkNum].TerrainMapData[tMeshNum].beingUpdated == false)
+				//add an option for toggling on or off (start tn at 0 instead of 1) these lines at the edge of each square
+				for (int tn = editorInput->DisplayEdgeLines; tn < mapList.TerrainTextureData.size(); tn++)
 				{
-					//add an option for toggling on or off (start tn at 0 instead of 1) these lines at the edge of each square
-					for (int tn = editorInput->DisplayEdgeLines; tn < mapList.TerrainTextureData.size(); tn++)
+
+					//check whether the mesh has any squares with the current texture
+					bool hasTexture = false;
+					//cache miss problem, needs to be stored elsewhere
+					/*
+					for (int tI = 0; tI < mapList.TerrainMapChunks[tChunkNum].TerrainMapData[tMeshNum].currentTexturesCount; tI++)
 					{
-
-						//check whether the mesh has any squares with the current texture
-						bool hasTexture = false;
-						for (int tI = 0; tI < mapList.TerrainMapChunks[tChunkNum].TerrainMapData[tMeshNum].currentTextures.size(); tI++)
+						if (mapList.TerrainMapChunks[tChunkNum].TerrainMapData[tMeshNum].currentTextures[tI] == mapList.TerrainTextureData[tn].index)
 						{
-							if (mapList.TerrainMapChunks[tChunkNum].TerrainMapData[tMeshNum].currentTextures[tI] == mapList.TerrainTextureData[tn].index)
-							{
-								hasTexture = true;
-							}
+							hasTexture = true;
+							tI = mapList.TerrainMapChunks[tChunkNum].TerrainMapData[tMeshNum].currentTexturesCount;
 						}
+					}
+					*/
+					hasTexture = true;
 
-						if (hasTexture == true)
+					if (hasTexture == true)
+					{
+						Graphics_Device->SetTexture(0, mapList.TerrainTextureData[tn].terrainTexture[0]);
+
+						bool bmLoaded = true;
+						/*
+						for (int bm = 0; bm < 8; bm++)
 						{
-							Graphics_Device->SetTexture(0, mapList.TerrainTextureData[tn].terrainTexture[0]);
+						//if (mapList.TerrainMapChunks[tChunkNum].TerrainMapData[tMeshNum].Terrain_Blending_Mesh[bm] == NULL)
+						{
+						//bmLoaded = false;
+						}
+						}
+						*/
 
-							bool bmLoaded = true;
+						if (bmLoaded)
+						{
 							for (int bm = 0; bm < 8; bm++)
 							{
-								//if (mapList.TerrainMapChunks[tChunkNum].TerrainMapData[tMeshNum].Terrain_Blending_Mesh[bm] == NULL)//29.8%
-								{
-									//bmLoaded = false;
-								}
+								mapList.TerrainMapChunks[tChunkNum].TerrainMapData[tMeshNum].Terrain_Blending_Mesh[bm]->DrawSubset(tn);
+								drawSubsetCalls++;
 							}
-
-							if (bmLoaded)
-							{
-								for (int bm = 0; bm < 8; bm++)
-								{
-									mapList.TerrainMapChunks[tChunkNum].TerrainMapData[tMeshNum].Terrain_Blending_Mesh[bm]->DrawSubset(tn);//34.5%
-								}
-							}
-
 						}
 
-
 					}
+
+
 				}
 			}
 		}
 
 	}
 
-
+	
 
 
 

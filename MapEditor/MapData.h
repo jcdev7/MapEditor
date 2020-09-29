@@ -48,7 +48,9 @@ public:
 	int materialMap[100][100];
 	int textureMap[100][100];
 
-	std::vector<int> currentTextures;//the textures used in this square
+	int currentTextures[100];//the textures used in this square
+	int currentTexturesMax = 100;
+	int currentTexturesCount = 0;//count of spaces in currentTextures which are used by this square
 
 	ID3DXMesh *Terrain_Mesh;//optimized mesh for drawing
 	ID3DXMesh *Target_Terrain_Mesh;//unoptimized mesh for picking
@@ -66,7 +68,7 @@ public:
 	D3DXVECTOR3 BBMax;
 
 
-	//SceneryObject data:
+	//SceneryObject data: (will probably move this to another class)
 	std::vector<ObjectData> objectMeshes;
 	int numObjects;
 

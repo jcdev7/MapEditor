@@ -24,6 +24,7 @@ public:
 	TerrainMeshData(LPDIRECT3DDEVICE9);
 	~TerrainMeshData();
 	LPD3DXMESH GetTerrainMesh(MapList*, int, int, int, bool);
+	LPD3DXMESH CombineMeshes();
 	LPD3DXMESH GetTerrainBlendingMesh(MapList*, int, int, int, int);
 	void Release();
 private:
